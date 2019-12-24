@@ -42,7 +42,7 @@ class VerifiablePresentationSigner {
      * @param vp the verifiable presentation parameters (not the object itself)
      * @param {{accountId: number, keyId: number}[]} keys
      * @param {string} correspondenceId to use as proof nonce to prove the session between holder and counterparty
-     * @return IProof[]
+     * @return IProofParams[]
      */
     generateProofs(vp, keys, correspondenceId) {
         const proofs = [];

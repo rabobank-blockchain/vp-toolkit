@@ -30,7 +30,7 @@ class VerifiableCredentialGenerator {
      * If you use only one key for every sign action,
      * use 0 for accountId and keyId.
      *
-     * @param {IVerifiableCredential} params without proof!
+     * @param {IVerifiableCredentialParams} params without proof!
      * @param {number} accountId
      * @param {number} keyId
      * @return ChallengeRequest

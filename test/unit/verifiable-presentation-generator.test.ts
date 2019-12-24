@@ -18,14 +18,14 @@
 import * as chai from 'chai'
 import * as sinon from 'sinon'
 import * as sinonChai from 'sinon-chai'
-import { CredentialStatus, IProof, IVerifiablePresentation, VerifiableCredential } from 'vp-toolkit-models'
+import { CredentialStatus, IProofParams, IVerifiablePresentationParams, VerifiableCredential } from 'vp-toolkit-models'
 import { LocalCryptUtils } from 'crypt-util'
 import { VerifiableCredentialSigner, VerifiablePresentationGenerator, VerifiablePresentationSigner } from '../../src'
 
 const assert = chai.assert
 
 const correspondenceId = 'a710042c-bff8-4fb4-af3e-bed9ead63698'
-const testProof: IProof = {
+const testProof: IProofParams = {
   type: 'Secp256k1Signature2019',
   created: new Date(Date.UTC(2019, 0, 1, 23, 34, 56)),
   verificationMethod: 'pubkey'
@@ -48,7 +48,7 @@ const testCred = new VerifiableCredential({
   '@context': ['https://schema.org/givenName']
 })
 
-const testVP: IVerifiablePresentation = {
+const testVP: IVerifiablePresentationParams = {
   id: 'urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5',
   type: ['VerifiablePresentation'],
   verifiableCredential: [testCred],

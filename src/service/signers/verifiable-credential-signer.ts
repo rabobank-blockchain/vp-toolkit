@@ -15,7 +15,7 @@
  *
  */
 
-import { IVerifiableCredential, VerifiableCredential } from 'vp-toolkit-models'
+import { IVerifiableCredentialParams, VerifiableCredential } from 'vp-toolkit-models'
 import { CryptUtil } from 'crypt-util'
 
 export class VerifiableCredentialSigner {
@@ -44,7 +44,7 @@ export class VerifiableCredentialSigner {
    * @return string
    */
   public signVerifiableCredential (model: VerifiableCredential, accountId: number, keyId: number): string {
-    const modelWithoutSignatureValue = new VerifiableCredential(model.toJSON() as IVerifiableCredential) // Copy to new variable
+    const modelWithoutSignatureValue = new VerifiableCredential(model.toJSON() as IVerifiableCredentialParams) // Copy to new variable
     modelWithoutSignatureValue.proof.signatureValue = undefined
     return this._cryptUtil.signPayload(accountId, keyId, JSON.stringify(modelWithoutSignatureValue))
   }
@@ -56,7 +56,7 @@ export class VerifiableCredentialSigner {
    * @return boolean
    */
   public verifyVerifiableCredential (model: VerifiableCredential): boolean {
-    const modelWithoutSignatureValue = new VerifiableCredential(model.toJSON() as IVerifiableCredential) // Copy to new variable
+    const modelWithoutSignatureValue = new VerifiableCredential(model.toJSON() as IVerifiableCredentialParams) // Copy to new variable
     const publicKey = model.proof.verificationMethod
     const signature = model.proof.signatureValue as string
     modelWithoutSignatureValue.proof.signatureValue = undefined // Removed the SignatureValue because that field was also empty when signing the payload

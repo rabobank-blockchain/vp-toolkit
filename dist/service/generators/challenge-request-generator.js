@@ -30,7 +30,7 @@ class ChallengeRequestGenerator {
      * If you use only one key for every sign action,
      * use 0 for accountId and keyId.
      *
-     * @param {IChallengeRequest} params without proof!
+     * @param {IChallengeRequestParams} params without proof!
      * @param {number} accountId
      * @param {number} keyId
      * @return ChallengeRequest

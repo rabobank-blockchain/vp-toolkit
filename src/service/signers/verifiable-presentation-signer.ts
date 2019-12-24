@@ -15,7 +15,7 @@
  *
  */
 
-import { IProof, IVerifiablePresentation, VerifiablePresentation } from 'vp-toolkit-models'
+import { IProofParams, IVerifiablePresentationParams, VerifiablePresentation } from 'vp-toolkit-models'
 import { CryptUtil } from 'crypt-util'
 import { v4 as uuid } from 'uuid'
 import { VerifiableCredentialSigner } from './verifiable-credential-signer'
@@ -47,10 +47,10 @@ export class VerifiablePresentationSigner {
    * @param vp the verifiable presentation parameters (not the object itself)
    * @param {{accountId: number, keyId: number}[]} keys
    * @param {string} correspondenceId to use as proof nonce to prove the session between holder and counterparty
-   * @return IProof[]
+   * @return IProofParams[]
    */
-  public generateProofs (vp: IVerifiablePresentation, keys: { accountId: number, keyId: number }[], correspondenceId?: string): IProof[] {
-    const proofs: IProof[] = []
+  public generateProofs (vp: IVerifiablePresentationParams, keys: { accountId: number, keyId: number }[], correspondenceId?: string): IProofParams[] {
+    const proofs: IProofParams[] = []
     for (const vc of vp.verifiableCredential) {
       for (const keySet of keys) {
         const address = this._cryptUtil.deriveAddress(keySet.accountId, keySet.keyId)

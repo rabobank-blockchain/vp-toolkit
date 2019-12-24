@@ -18,13 +18,13 @@
 import * as chai from 'chai'
 import * as sinon from 'sinon'
 import * as sinonChai from 'sinon-chai'
-import { IChallengeRequest, IProof } from 'vp-toolkit-models'
+import { IChallengeRequestParams, IProofParams } from 'vp-toolkit-models'
 import { LocalCryptUtils } from 'crypt-util'
 import { ChallengeRequestGenerator, ChallengeRequestSigner } from '../../src'
 
 const assert = chai.assert
 
-const testProof: IProof = {
+const testProof: IProofParams = {
   type: 'Secp256k1Signature2019',
   created: new Date('01-01-2019 12:34:00'),
   verificationMethod: 'pubkey'
@@ -66,7 +66,7 @@ describe('challenge request generator', function () {
     sinon.stub(challengeRequestSigner, 'signatureType').get(() => {
       return 'SignatureType2019'
     })
-    const expectedChallengeRequestParams: IChallengeRequest = {
+    const expectedChallengeRequestParams: IChallengeRequestParams = {
       toAttest: [
         { predicate: 'https://schema.org/givenName' },
         { predicate: 'https://schema.org/familyName' }

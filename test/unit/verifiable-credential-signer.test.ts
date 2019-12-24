@@ -18,20 +18,20 @@
 import * as chai from 'chai'
 import * as sinon from 'sinon'
 import * as sinonChai from 'sinon-chai'
-import { CredentialStatus, IProof, IVerifiableCredential, VerifiableCredential } from 'vp-toolkit-models'
+import { CredentialStatus, IProofParams, IVerifiableCredentialParams, VerifiableCredential } from 'vp-toolkit-models'
 import { LocalCryptUtils } from 'crypt-util'
 import { VerifiableCredentialSigner } from '../../src'
 
 const assert = chai.assert
 
-const testProof: IProof = {
+const testProof: IProofParams = {
   type: 'Secp256k1Signature2019',
   created: new Date('01-01-2019 12:34:00'),
   verificationMethod: 'pubkey',
   signatureValue: 'abc'
 }
 
-const testCred: IVerifiableCredential = {
+const testCred: IVerifiableCredentialParams = {
   id: 'did:protocol:address',
   type: ['VerifiableCredential'],
   issuer: 'did:protocol:issueraddress',
@@ -82,7 +82,7 @@ describe('verifiable credential signer', function () {
   it('should call cryptutil, for the sign method, with the correct params', () => {
     const verifiableCredential = new VerifiableCredential(testCred)
     const expectedSignatureValue = 'signature'
-    const vcWithoutSig = new VerifiableCredential(verifiableCredential.toJSON() as IVerifiableCredential)
+    const vcWithoutSig = new VerifiableCredential(verifiableCredential.toJSON() as IVerifiableCredentialParams)
     vcWithoutSig.proof.signatureValue = undefined
     const stub = sinon.stub(cryptUtil, 'signPayload').returns(expectedSignatureValue)
 
@@ -96,7 +96,7 @@ describe('verifiable credential signer', function () {
     const verifiableCredential = new VerifiableCredential(testCred)
     const publicKey = verifiableCredential.proof.verificationMethod
     const signature = String(verifiableCredential.proof.signatureValue)
-    const vcWithoutSig = new VerifiableCredential(verifiableCredential.toJSON() as IVerifiableCredential)
+    const vcWithoutSig = new VerifiableCredential(verifiableCredential.toJSON() as IVerifiableCredentialParams)
     vcWithoutSig.proof.signatureValue = undefined
     const expectedPayload = JSON.stringify(vcWithoutSig)
     const stub = sinon.stub(cryptUtil, 'verifyPayload').returns(true)
@@ -111,7 +111,7 @@ describe('verifiable credential signer', function () {
     const verifiableCredential = new VerifiableCredential(testCred)
     const publicKey = verifiableCredential.proof.verificationMethod
     const signature = String(verifiableCredential.proof.signatureValue)
-    const vcWithoutSig = new VerifiableCredential(verifiableCredential.toJSON() as IVerifiableCredential)
+    const vcWithoutSig = new VerifiableCredential(verifiableCredential.toJSON() as IVerifiableCredentialParams)
     vcWithoutSig.proof.signatureValue = undefined
     const expectedPayload = JSON.stringify(vcWithoutSig)
     const stub = sinon.stub(cryptUtil, 'verifyPayload').returns(false) // Fail here

@@ -15,7 +15,7 @@
  *
  */
 
-import { ChallengeRequest, IChallengeRequest } from 'vp-toolkit-models'
+import { ChallengeRequest, IChallengeRequestParams } from 'vp-toolkit-models'
 import { ChallengeRequestSigner } from '../..'
 
 export class ChallengeRequestGenerator {
@@ -32,12 +32,12 @@ export class ChallengeRequestGenerator {
    * If you use only one key for every sign action,
    * use 0 for accountId and keyId.
    *
-   * @param {IChallengeRequest} params without proof!
+   * @param {IChallengeRequestParams} params without proof!
    * @param {number} accountId
    * @param {number} keyId
    * @return ChallengeRequest
    */
-  public generateChallengeRequest (params: IChallengeRequest, accountId: number, keyId: number): ChallengeRequest {
+  public generateChallengeRequest (params: IChallengeRequestParams, accountId: number, keyId: number): ChallengeRequest {
     const verificationMethod = this._signer.cryptUtil.derivePublicKey(accountId, keyId)
     params.proof = {
       type: this._signer.signatureType,

@@ -1,4 +1,4 @@
-import { IVerifiablePresentation, VerifiablePresentation } from 'vp-toolkit-models';
+import { IVerifiablePresentationParams, VerifiablePresentation } from 'vp-toolkit-models';
 import { VerifiablePresentationSigner } from '../..';
 export declare class VerifiablePresentationGenerator {
     private _signer;
@@ -16,12 +16,12 @@ export declare class VerifiablePresentationGenerator {
      * Proof chains are not supported.
      * @see https://w3c-dvcg.github.io/ld-proofs/#proof-sets
      *
-     * @param {IVerifiablePresentation} params the proof will be overwritten!
+     * @param {IVerifiablePresentationParams} params the proof will be overwritten!
      * @param {{accountId: number, keyId: number}[]} keys used to prove ownership over each VC inside
      * @param {string|undefined} correspondenceId optional value to use as proof.nonce field
      * @return VerifiablePresentation
      */
-    generateVerifiablePresentation(params: IVerifiablePresentation, keys: {
+    generateVerifiablePresentation(params: IVerifiablePresentationParams, keys: {
         accountId: number;
         keyId: number;
     }[], correspondenceId?: string): VerifiablePresentation;

@@ -20,9 +20,9 @@ import * as sinon from 'sinon'
 import * as sinonChai from 'sinon-chai'
 import {
   CredentialStatus,
-  IProof,
-  IVerifiableCredential,
-  IVerifiablePresentation,
+  IProofParams,
+  IVerifiableCredentialParams,
+  IVerifiablePresentationParams,
   VerifiableCredential,
   VerifiablePresentation
 } from 'vp-toolkit-models'
@@ -31,7 +31,7 @@ import { VerifiableCredentialSigner, VerifiablePresentationSigner } from '../../
 
 const assert = chai.assert
 
-const testVcProof: IProof = {
+const testVcProof: IProofParams = {
   nonce: '43c29538-bf6a-4020-bd01-39c47c00589e',
   type: 'Secp256k1Signature2019',
   created: new Date('01-01-2019 12:34:00'),
@@ -39,7 +39,7 @@ const testVcProof: IProof = {
   signatureValue: 'credentialsignature'
 }
 
-const testVpProof: IProof = {
+const testVpProof: IProofParams = {
   nonce: '966fb58c-c17e-4b42-b7d3-ded38e725a86',
   type: 'Secp256k1Signature2019',
   created: new Date('01-01-2019 12:34:00'),
@@ -47,7 +47,7 @@ const testVpProof: IProof = {
   signatureValue: 'validSignature'
 }
 
-const testVcParams: IVerifiableCredential = {
+const testVcParams: IVerifiableCredentialParams = {
   id: 'did:protocol:address',
   type: ['VerifiableCredential'],
   issuer: 'did:protocol:issueraddress',
@@ -66,7 +66,7 @@ const testVcParams: IVerifiableCredential = {
 
 const testVc = new VerifiableCredential(testVcParams)
 
-const testVP: IVerifiablePresentation = {
+const testVP: IVerifiablePresentationParams = {
   id: 'urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5',
   type: ['VerifiablePresentation'],
   verifiableCredential: [testVc],
@@ -216,7 +216,7 @@ describe('verifiable presentation signer', function () {
   })
 
   it('should call the appropriate dependencies (with multiple valid proofs in VP)', () => {
-    const vpWithMultipleProofs: IVerifiablePresentation = {
+    const vpWithMultipleProofs: IVerifiablePresentationParams = {
       id: 'urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5',
       type: ['VerifiablePresentation'],
       verifiableCredential: [testVc],

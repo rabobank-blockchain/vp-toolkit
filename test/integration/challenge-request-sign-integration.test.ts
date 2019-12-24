@@ -16,7 +16,7 @@
  */
 
 import * as chai from 'chai'
-import { ChallengeRequest, IProof } from 'vp-toolkit-models'
+import { ChallengeRequest, IProofParams } from 'vp-toolkit-models'
 import { LocalCryptUtils } from 'crypt-util'
 import { ChallengeRequestSigner } from '../../src'
 
@@ -26,7 +26,7 @@ const privKey = 'xprv9s21ZrQH143K3T7143BKMvxoLpFzUkoyU7sQS7iQ88FVGatVTvFe1sKU1Vv
 const accountId = 0
 const keyId = 0
 const derivedPubKey = '58ffea3c24293e9939823b165a7e9c565077e2458e823a396bdcafa65a4b1e768463a4a80aaa76c15848a4c9c16ff19361ef529cd7b890748fc717a82afe6aae' // From privKey, accountId and keyId
-const testProof: IProof = {
+const testProof: IProofParams = {
   type: 'Secp256k1Signature2019',
   created: new Date(Date.UTC(2019, 0, 1, 23, 34, 56)),
   verificationMethod: derivedPubKey,

@@ -18,19 +18,19 @@
 import * as chai from 'chai'
 import * as sinon from 'sinon'
 import * as sinonChai from 'sinon-chai'
-import { CredentialStatus, IProof, IVerifiableCredential } from 'vp-toolkit-models'
+import { CredentialStatus, IProofParams, IVerifiableCredentialParams } from 'vp-toolkit-models'
 import { LocalCryptUtils } from 'crypt-util'
 import { VerifiableCredentialGenerator, VerifiableCredentialSigner } from '../../src'
 
 const assert = chai.assert
 
-const testProof: IProof = {
+const testProof: IProofParams = {
   type: 'Secp256k1Signature2019',
   created: new Date('01-01-2019 12:34:00'),
   verificationMethod: 'pubkey'
 }
 
-const testCredParams: IVerifiableCredential = {
+const testCredParams: IVerifiableCredentialParams = {
   id: 'did:protocol:address',
   type: ['VerifiableCredential'],
   issuer: 'did:protocol:issueraddress',

@@ -1,4 +1,4 @@
-import { IProof, IVerifiablePresentation, VerifiablePresentation } from 'vp-toolkit-models';
+import { IProofParams, IVerifiablePresentationParams, VerifiablePresentation } from 'vp-toolkit-models';
 import { CryptUtil } from 'crypt-util';
 import { VerifiableCredentialSigner } from './verifiable-credential-signer';
 export declare class VerifiablePresentationSigner {
@@ -21,12 +21,12 @@ export declare class VerifiablePresentationSigner {
      * @param vp the verifiable presentation parameters (not the object itself)
      * @param {{accountId: number, keyId: number}[]} keys
      * @param {string} correspondenceId to use as proof nonce to prove the session between holder and counterparty
-     * @return IProof[]
+     * @return IProofParams[]
      */
-    generateProofs(vp: IVerifiablePresentation, keys: {
+    generateProofs(vp: IVerifiablePresentationParams, keys: {
         accountId: number;
         keyId: number;
-    }[], correspondenceId?: string): IProof[];
+    }[], correspondenceId?: string): IProofParams[];
     /**
      * Verifies all VerifiableCredential
      * signatures.

@@ -1,4 +1,4 @@
-import { IVerifiableCredential, VerifiableCredential } from 'vp-toolkit-models';
+import { IVerifiableCredentialParams, VerifiableCredential } from 'vp-toolkit-models';
 import { VerifiableCredentialSigner } from '../..';
 export declare class VerifiableCredentialGenerator {
     private _signer;
@@ -12,10 +12,10 @@ export declare class VerifiableCredentialGenerator {
      * If you use only one key for every sign action,
      * use 0 for accountId and keyId.
      *
-     * @param {IVerifiableCredential} params without proof!
+     * @param {IVerifiableCredentialParams} params without proof!
      * @param {number} accountId
      * @param {number} keyId
      * @return ChallengeRequest
      */
-    generateVerifiableCredential(params: IVerifiableCredential, accountId: number, keyId: number): VerifiableCredential;
+    generateVerifiableCredential(params: IVerifiableCredentialParams, accountId: number, keyId: number): VerifiableCredential;
 }
