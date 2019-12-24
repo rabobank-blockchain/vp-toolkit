@@ -32,11 +32,13 @@ const testProof: IProofParams = {
   verificationMethod: derivedPubKey,
   nonce: '50d2df25-b223-4bed-b9f5-3f16ea299fa1'
 }
+const postEndpoint = 'https://domain.org/ssif/verifiable-presentation-endpoint'
 const challengeRequest = new ChallengeRequest({
   toAttest: [{ predicate: 'https://schema.org/familyName' }],
   toVerify: [{ predicate: 'https://schema.org/initials' }],
   proof: testProof,
-  correspondenceId: '21a7133d-861b-4e30-aa52-14c21cc51ecc'
+  correspondenceId: '21a7133d-861b-4e30-aa52-14c21cc51ecc',
+  postEndpoint: postEndpoint
 })
 
 before(() => {
@@ -48,7 +50,7 @@ describe('Integration: challenge request signer', function () {
     const cryptUtil = new LocalCryptUtils()
     cryptUtil.importMasterPrivateKey(privKey)
     const sut = new ChallengeRequestSigner(cryptUtil)
-    const expectedSignature = 'a382d709f653fceac4be4e8d3f56f863ab7ec6e6e89afcaaf862a1dd8c1647850f451f2612505b9ee4ba4092b04c2e1ebedc479c43e05fb97a93b7bb53c4599a'
+    const expectedSignature = 'bdf6b360b08ad4a8d860a30e36833c8a44c0ce5d72450cf5c7fbe63f24df320e7e3f59f503ee721aca55888eff492b844f649bbf72b7559665d0cbf2d4f0ed2a'
 
     const signature = sut.signChallengeRequest(challengeRequest, accountId, keyId)
 
@@ -67,7 +69,8 @@ describe('Integration: challenge request signer', function () {
         type: 'Secp256k1Signature2019',
         created: new Date('01-01-2019 12:34:00'),
         verificationMethod: derivedPubKey
-      }
+      },
+      postEndpoint: postEndpoint
     })
 
     // First obtain and set the signature for the object

@@ -30,6 +30,8 @@ const testProof: IProofParams = {
   verificationMethod: 'pubkey'
 }
 
+const postEndpoint = 'https://domain.org/ssif/verifiable-presentation-endpoint'
+
 before(() => {
   chai.should()
   chai.use(sinonChai)
@@ -65,6 +67,7 @@ describe('challenge request signer', function () {
     const challengeRequest = new ChallengeRequest({
       toAttest: [{ predicate: 'https://schema.org/familyName' }],
       toVerify: [{ predicate: 'https://schema.org/initials' }],
+      postEndpoint: postEndpoint,
       proof: testProof
     })
     const expectedSignatureValue = 'signature'
@@ -80,6 +83,7 @@ describe('challenge request signer', function () {
     const challengeRequest = new ChallengeRequest({
       toAttest: [{ predicate: 'https://schema.org/familyName' }],
       toVerify: [{ predicate: 'https://schema.org/initials' }],
+      postEndpoint: postEndpoint,
       proof: testProof
     })
     const publicKey = challengeRequest.proof.verificationMethod
@@ -97,6 +101,7 @@ describe('challenge request signer', function () {
     const challengeRequest = new ChallengeRequest({
       toAttest: [{ predicate: 'https://schema.org/familyName' }],
       toVerify: [{ predicate: 'https://schema.org/initials' }],
+      postEndpoint: postEndpoint,
       proof: testProof
     })
     const publicKey = challengeRequest.proof.verificationMethod

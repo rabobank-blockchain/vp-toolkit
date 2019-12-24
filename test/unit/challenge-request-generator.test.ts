@@ -74,6 +74,7 @@ describe('challenge request generator', function () {
       toVerify: [
         { predicate: 'https://schema.org/initials' }
       ],
+      postEndpoint: 'https://domain.org/ssif/verifiable-presentation-endpoint',
       correspondenceId: '1e66fc69-05c6-4692-aa84-80eaacbf4bcc',
       proof: testProof
     }
@@ -87,7 +88,7 @@ describe('challenge request generator', function () {
     // Asserting whether the result is as expected
     const resultString = JSON.stringify(result)
     const obj = JSON.parse(resultString)
-    assert.deepEqual(resultString, `{"toAttest":[{"predicate":"https://schema.org/givenName"},{"predicate":"https://schema.org/familyName"}],"toVerify":[{"predicate":"https://schema.org/initials"}],"correspondenceId":"${obj.correspondenceId}","proof":{"type":"SignatureType2019","created":"2019-01-01T23:34:56.000Z","verificationMethod":"pubkey","nonce":"${obj.proof.nonce}","signatureValue":"testSignatureValue"}}`)
+    assert.deepEqual(resultString, `{"toAttest":[{"predicate":"https://schema.org/givenName"},{"predicate":"https://schema.org/familyName"}],"toVerify":[{"predicate":"https://schema.org/initials"}],"postEndpoint":"https://domain.org/ssif/verifiable-presentation-endpoint","correspondenceId":"${obj.correspondenceId}","proof":{"type":"SignatureType2019","created":"2019-01-01T23:34:56.000Z","verificationMethod":"pubkey","nonce":"${obj.proof.nonce}","signatureValue":"testSignatureValue"}}`)
     result.proof.created.should.have.been.equal(clock.Date().toISOString())
     // Asserting whether cryptUtil has been called properly to determine the verificationMethod
     cryptUtilStub.should.have.been.calledOnceWithExactly(0, 0)
