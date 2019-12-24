@@ -1,1 +1,10 @@
-{"version":3,"file":"verifiable-presentation-generator.js","sourceRoot":"","sources":["../../../src/service/generators/verifiable-presentation-generator.ts"],"names":[],"mappings":";AAAA;;;;;;;;;;;;;;;GAeG;;AAEH,yDAAmF;AAGnF,MAAa,+BAA+B;IAE1C,YAA4B,OAAqC;QAArC,YAAO,GAAP,OAAO,CAA8B;IACjE,CAAC;IAED;;;;;;;;;;;;;;;;;OAiBG;IACI,8BAA8B,CACnC,MAA+B,EAC/B,IAA4C,EAC5C,gBAAyB;QAEzB,MAAM,CAAC,KAAK,GAAG,IAAI,CAAC,OAAO,CAAC,cAAc,CAAC,MAAM,EAAE,IAAI,EAAE,gBAAgB,CAAC,CAAA;QAC1E,OAAO,IAAI,0CAAsB,CAAC,MAAM,CAAC,CAAA;IAC3C,CAAC;CACF;AA/BD,0EA+BC"}
+{
+  "version": 3,
+  "file": "verifiable-presentation-generator.js",
+  "sourceRoot": "",
+  "sources": [
+    "../../../src/service/generators/verifiable-presentation-generator.ts"
+  ],
+  "names": [],
+  "mappings": ";AAAA;;;;;;;;;;;;;;;GAeG;;AAEH,yDAAyF;AAGzF,MAAa,+BAA+B;IAE1C,YAA4B,OAAqC;QAArC,YAAO,GAAP,OAAO,CAA8B;IACjE,CAAC;IAED;;;;;;;;;;;;;;;;;OAiBG;IACI,8BAA8B,CACnC,MAAqC,EACrC,IAA4C,EAC5C,gBAAyB;QAEzB,MAAM,CAAC,KAAK,GAAG,IAAI,CAAC,OAAO,CAAC,cAAc,CAAC,MAAM,EAAE,IAAI,EAAE,gBAAgB,CAAC,CAAA;QAC1E,OAAO,IAAI,0CAAsB,CAAC,MAAM,CAAC,CAAA;IAC3C,CAAC;CACF;AA/BD,0EA+BC"
+}
