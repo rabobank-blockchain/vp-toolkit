@@ -134,7 +134,8 @@ const generator = new ChallengeRequestGenerator(signer)
 cryptAlgorithm.importMasterPrivateKey(yourPrivateKey)
 const challengeRequest = generator.generateChallengeRequest({
   toAttest: ['https://schema.org/familyName'], // These are the subjects you (as an issuer) want to attest to the holder
-  toVerify: ['https://schema.org/firstName'] // These are the subjects you (as a verifier) want to receive from the holder
+  toVerify: ['https://schema.org/firstName'], // These are the subjects you (as a verifier) want to receive from the holder
+  postEndpoint: 'https://domain.org/ssif/verifiable-presentation-endpoint' // The holder app will post a Verifiable Presentation to this endpoint
 }, 0, 0)
 // You can use toAttest and toVerify both at the same time, for instance if you require some credentials before issuing.
 
