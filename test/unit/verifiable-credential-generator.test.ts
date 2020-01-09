@@ -56,11 +56,12 @@ describe('verifiable credential generator', function () {
   const cryptUtil = new LocalCryptUtils()
   const signer = new VerifiableCredentialSigner(cryptUtil)
   const sut = new VerifiableCredentialGenerator(signer)
+  const sinonTime = new Date(Date.UTC(2019, 0, 1, 4, 8, 50))
   let clock: sinon.SinonFakeTimers
 
   beforeEach(() => {
     clock = sinon.useFakeTimers({
-      now: new Date(Date.UTC(2019, 0, 1, 4, 8, 50)),
+      now: sinonTime,
       shouldAdvanceTime: false
     })
   })
@@ -91,9 +92,9 @@ describe('verifiable credential generator', function () {
 
     // Asserting whether the result is as expected
     const resultString = JSON.stringify(result)
-    resultString.should.be.equal(`{"id":"did:protocol:address","type":["VerifiableCredential"],"issuer":"did:protocol:issueraddress","issuanceDate":"${testCredParams.issuanceDate.toISOString()}","credentialSubject":{"id":"did:protocol:holderaddress","type":"John"},"proof":{"type":"SignatureType2019","created":"${clock.Date().toISOString()}","verificationMethod":"pubkey","nonce":"${result.proof.nonce}","signatureValue":"testSignatureValue"},"credentialStatus":{"type":"vcStatusRegistry2019","id":"0x6AbAAFB672f60C16C604A29426aDA1Af9d96d440"},"@context":["https://schema.org/givenName"]}`)
+    resultString.should.be.equal(`{"id":"did:protocol:address","type":["VerifiableCredential"],"issuer":"did:protocol:issueraddress","issuanceDate":"${testCredParams.issuanceDate.toISOString()}","credentialSubject":{"id":"did:protocol:holderaddress","type":"John"},"proof":{"type":"SignatureType2019","created":"${sinonTime.toISOString()}","verificationMethod":"pubkey","nonce":"${result.proof.nonce}","signatureValue":"testSignatureValue"},"credentialStatus":{"type":"vcStatusRegistry2019","id":"0x6AbAAFB672f60C16C604A29426aDA1Af9d96d440"},"@context":["https://schema.org/givenName"]}`)
 
-    result.proof.created.should.have.been.equal(clock.Date().toISOString())
+    result.proof.created.should.have.been.equal(sinonTime.toISOString())
     // Asserting whether cryptUtil has been called properly to determine the verificationMethod
     cryptUtilStub.should.have.been.calledOnceWithExactly(0, 0)
     // Asserting whether ChallengeRequestSigner was called with the exact same object
