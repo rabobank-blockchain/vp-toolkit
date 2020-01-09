@@ -1,22 +1,27 @@
-import { IProofParams, IVerifiablePresentationParams, VerifiablePresentation } from 'vp-toolkit-models';
-import { CryptUtil } from 'crypt-util';
-import { VerifiableCredentialSigner } from './verifiable-credential-signer';
+import { IProofParams, IVerifiablePresentationParams, VerifiablePresentation } from 'vp-toolkit-models'
+import { CryptUtil } from 'crypt-util'
+import { VerifiableCredentialSigner } from './verifiable-credential-signer'
+
 export declare class VerifiablePresentationSigner {
-    private _cryptUtil;
-    private _verifiableCredentialSigner;
-    constructor(_cryptUtil: CryptUtil, _verifiableCredentialSigner: VerifiableCredentialSigner);
-    readonly signatureType: string;
-    readonly cryptUtil: CryptUtil;
-    /**
-     * Creates a proof objects for the VerifiableCredentials.
-     * Because CryptUtil is being used, we need to provide an
-     * accountId and keyId so the VC is signed with
-     * the correct derivated key. If you use only one global
-     * key for your product, then provide the accountId and
-     * keyId once.
-     *
-     * A random uuid will be used if the correspondenceId
-     * is not provided.
+  private _cryptUtil
+  private _verifiableCredentialSigner
+
+  constructor (_cryptUtil: CryptUtil, _verifiableCredentialSigner: VerifiableCredentialSigner);
+
+  get signatureType (): string;
+
+  get cryptUtil (): CryptUtil;
+
+  /**
+   * Creates a proof objects for the VerifiableCredentials.
+   * Because CryptUtil is being used, we need to provide an
+   * accountId and keyId so the VC is signed with
+   * the correct derivated key. If you use only one global
+   * key for your product, then provide the accountId and
+   * keyId once.
+   *
+   * A random uuid will be used if the correspondenceId
+   * is not provided.
      *
      * @param vp the verifiable presentation parameters (not the object itself)
      * @param {{accountId: number, keyId: number}[]} keys
