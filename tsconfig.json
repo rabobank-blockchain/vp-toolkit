@@ -7,10 +7,18 @@
     "sourceMap": true,
     "declaration": true,
     "baseUrl": "types",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "target": "es6",
-    "lib": ["es2016", "dom"],
-    "rootDir": "src",
+    "lib": [
+      "es2016",
+      "dom"
+    ],
+    "rootDirs": [
+      "src",
+      "test"
+    ],
     "outDir": "dist",
     "types": [
       "mocha"

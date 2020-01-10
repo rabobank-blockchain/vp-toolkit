@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Rabobank NL
+ * Copyright 2020 Coöperatieve Rabobank U.A.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 import * as chai from 'chai'
@@ -39,11 +38,12 @@ describe('challenge request generator', function () {
   const cryptUtil = new LocalCryptUtils()
   const challengeRequestSigner = new ChallengeRequestSigner(cryptUtil)
   const sut = new ChallengeRequestGenerator(challengeRequestSigner)
+  const sinonTime = new Date(Date.UTC(2019, 0, 1, 23, 34, 56))
   let clock: sinon.SinonFakeTimers
 
   beforeEach(() => {
     clock = sinon.useFakeTimers({
-      now: new Date(Date.UTC(2019, 0, 1, 23, 34, 56)),
+      now: sinonTime,
       shouldAdvanceTime: false
     })
   })
@@ -89,7 +89,7 @@ describe('challenge request generator', function () {
     const resultString = JSON.stringify(result)
     const obj = JSON.parse(resultString)
     assert.deepEqual(resultString, `{"toAttest":[{"predicate":"https://schema.org/givenName"},{"predicate":"https://schema.org/familyName"}],"toVerify":[{"predicate":"https://schema.org/initials"}],"postEndpoint":"https://domain.org/ssif/verifiable-presentation-endpoint","correspondenceId":"${obj.correspondenceId}","proof":{"type":"SignatureType2019","created":"2019-01-01T23:34:56.000Z","verificationMethod":"pubkey","nonce":"${obj.proof.nonce}","signatureValue":"testSignatureValue"}}`)
-    result.proof.created.should.have.been.equal(clock.Date().toISOString())
+    result.proof.created.should.have.been.equal(sinonTime.toISOString())
     // Asserting whether cryptUtil has been called properly to determine the verificationMethod
     cryptUtilStub.should.have.been.calledOnceWithExactly(0, 0)
     // Asserting whether ChallengeRequestSigner was called with the exact same object

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Rabobank NL
+ * Copyright 2020 Coöperatieve Rabobank U.A.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 import * as chai from 'chai'
@@ -83,11 +82,12 @@ describe('verifiable presentation signer', function () {
   const cryptUtil = new LocalCryptUtils()
   const vcSigner = new VerifiableCredentialSigner(cryptUtil)
   const sut = new VerifiablePresentationSigner(cryptUtil, vcSigner)
+  const sinonTime = new Date(Date.UTC(2019, 0, 1, 23, 34, 56))
   let clock: sinon.SinonFakeTimers
 
   beforeEach(() => {
     clock = sinon.useFakeTimers({
-      now: new Date(Date.UTC(2019, 0, 1, 23, 34, 56)),
+      now: sinonTime,
       shouldAdvanceTime: false
     })
   })
@@ -125,13 +125,13 @@ describe('verifiable presentation signer', function () {
 
     const result = sut.generateProofs(testVP, [{ accountId: 0, keyId: 0 }])
 
-    const expectedPayload = JSON.stringify(testVc) + result[0].nonce + clock.Date().toISOString()
+    const expectedPayload = JSON.stringify(testVc) + result[0].nonce + sinonTime.toISOString()
     cryptUtilSignStub.should.have.been.calledOnceWithExactly(0, 0, expectedPayload)
     cryptUtilDeriveAddrStub.should.have.been.calledOnceWithExactly(0, 0)
     cryptUtilDerivePubKeyStub.should.have.been.calledOnceWithExactly(0, 0)
     result.should.be.deep.equal([{
       type: 'CryptSignature2019',
-      created: clock.Date(),
+      created: sinonTime,
       verificationMethod: expectedPublicKey,
       nonce: result[0].nonce,
       signatureValue: expectedSignatureValue
@@ -148,13 +148,13 @@ describe('verifiable presentation signer', function () {
 
     const result = sut.generateProofs(testVP, [{ accountId: 0, keyId: 0 }]) // Self signed
 
-    const expectedPayload = JSON.stringify(testVc) + result[0].nonce + clock.Date().toISOString()
+    const expectedPayload = JSON.stringify(testVc) + result[0].nonce + sinonTime.toISOString()
     cryptUtilSignStub.should.have.been.calledOnceWithExactly(0, 0, expectedPayload)
     cryptUtilDeriveAddrStub.should.have.been.calledOnceWithExactly(0, 0)
     cryptUtilDerivePubKeyStub.should.have.been.calledOnceWithExactly(0, 0)
     result.should.be.deep.equal([{
       type: 'CryptSignature2019',
-      created: clock.Date(),
+      created: sinonTime,
       verificationMethod: expectedPublicKey,
       nonce: result[0].nonce,
       signatureValue: expectedSignatureValue
