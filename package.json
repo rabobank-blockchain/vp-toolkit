@@ -74,6 +74,6 @@
     "class-transformer": "^0.2.3",
     "crypt-util": "^0.1.5",
     "uuid": "^3.3.3",
-    "vp-toolkit-models": "^0.2.0"
+    "vp-toolkit-models": "^0.2.1"
   }
 }
