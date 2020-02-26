@@ -233,12 +233,14 @@ describe('verifiable presentation signer', function () {
       '@context': ['https://schema.org/givenName']
     }
     const verifiablePresentation = new VerifiablePresentation(vpWithMultipleProofs)
+    const vcSignerStub = sinon.stub(vcSigner, 'verifyVerifiableCredential').returns(true)
     const stub = sinon.stub(cryptUtil, 'verifyPayload').returns(true)
 
     const result = sut.verifyVerifiablePresentation(verifiablePresentation)
 
     result.should.be.equal(true)
-    stub.callCount.should.have.been.equal(2)
+    vcSignerStub.should.have.been.calledOnceWithExactly(testVc)
+    stub.callCount.should.have.been.equal(1)
   })
 
   it('should return false when cryptutil is failing to verify a cred. ownership', () => {

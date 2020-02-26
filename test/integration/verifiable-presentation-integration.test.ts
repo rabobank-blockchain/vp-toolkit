@@ -24,30 +24,37 @@ import {
 import { LocalCryptUtils } from 'crypt-util'
 import { VerifiableCredentialSigner, VerifiablePresentationGenerator, VerifiablePresentationSigner } from '../../src'
 
-const privKey = 'xprv9s21ZrQH143K3T7143BKMvxoLpFzUkoyU7sQS7iQ88FVGatVTvFe1sKU1Vvysj378AAvvTyjziPZ6AisTNV7uC9irDHEnxZqGYpeceP1S6c'
 const accountId = 0
 const keyId = 0
-const derivedPubKey = '58ffea3c24293e9939823b165a7e9c565077e2458e823a396bdcafa65a4b1e768463a4a80aaa76c15848a4c9c16ff19361ef529cd7b890748fc717a82afe6aae' // From privKey, accountId and keyId
-const derivedAddress = '0xc62CE67381C12615e0b88FF8dD001609926498b8' // If the accountId or keyId above changes, please generate a new address
+const issuerKeys = {
+  privKey: 'xprv9s21ZrQH143K3T7143BKMvxoLpFzUkoyU7sQS7iQ88FVGatVTvFe1sKU1Vvysj378AAvvTyjziPZ6AisTNV7uC9irDHEnxZqGYpeceP1S6c',
+  pubKey: '58ffea3c24293e9939823b165a7e9c565077e2458e823a396bdcafa65a4b1e768463a4a80aaa76c15848a4c9c16ff19361ef529cd7b890748fc717a82afe6aae',
+  address: '0xc62CE67381C12615e0b88FF8dD001609926498b8'
+}
+const holderKeys = { // Always generated as DID by the holder
+  privKey: 'xprv9s21ZrQH143K2xcKPR8Z6GDyvxSRY2FpGNhwmpPcoJKZ3BaeVbixKaoEMAUTBQkjqnmFJXGwQuktCwNVrXUBLvLgjwK5iym9keD3FJN2RdC',
+  pubKey: '5945c17dd10f13b0a6b860e6a6cc5ada7496f7718e9fef2bc31e6811d7c0a50491703adf65de62a5177b8812af5bb57586c4751e0ff2b6a7aa7d3c1dee48c670',
+  address: '0x47b7b31b9346fBb4C960DA804250cD9619b3b704'
+}
 
 // The self-signed credential using the variables above
 const selfSignedVcParams = {
   id: 'did:protocol:address',
   type: ['VerifiableCredential', 'DidOwnership'],
-  issuer: 'did:eth:' + derivedAddress,
+  issuer: 'did:eth:' + issuerKeys.address,
   issuanceDate: new Date('2019-01-01T23:34:45.000Z'),
-  credentialSubject: { id: 'did:eth:' + derivedAddress },
+  credentialSubject: { id: 'did:eth:' + issuerKeys.address },
   proof: {
     type: 'secp256k1Signature2019',
     created: new Date('2019-07-30T09:51:27.589Z'),
-    verificationMethod: derivedPubKey,
+    verificationMethod: issuerKeys.pubKey,
     nonce: 'deebe007-ab09-4893-a3be-f47b465edd8c',
     signatureValue:
       'f9c38be2b468bd5fb853d2ce2ecf95b2223885802b5243c75a97b5645315efbc5b9ad936a23e8a7bd5081329ff9cf9c0d3722ae09ff3dce6eba0169d6d8e474f'
   },
   credentialStatus: {
     type: 'vcStatusRegistry2019',
-    id: derivedAddress
+    id: issuerKeys.address
   },
   '@context': undefined
 }
@@ -63,24 +70,23 @@ const selfSignedVpParams: IVerifiablePresentationParams = {
 const issuerVcParams: IVerifiableCredentialParams = {
   id: 'did:protocol:address',
   type: ['VerifiableCredential'],
-  issuer: 'did:protocol:issueraddress',
+  issuer: 'did:eth:' + issuerKeys.address,
   issuanceDate: new Date(Date.UTC(2019, 0, 1, 23, 34, 56)),
   credentialSubject: {
-    id: 'did:eth:' + derivedAddress,
+    id: 'did:eth:' + holderKeys.address,
     type: 'John'
   },
   proof: {
     type: 'secp256k1Signature2019',
     created: new Date(Date.UTC(2019, 6, 30, 9, 8, 49, 665)),
-    verificationMethod:
-      '02ca0947afa216355ac2ecc7ac147b2c53c5d27f65eba6701a400d223c2ca6172b2944026138496fcebafa72c5141a17f4d86c58528637e0579125f8d22d6dc8',
+    verificationMethod: issuerKeys.pubKey,
     nonce: '62a7c7e6-b025-4e00-8956-c3859dacfe92',
     signatureValue:
-      '6f7ff5135421c5f298ceeabf872ec785e9c27d94cd5a885e42c7dc1f68314b287a52216fe0b070cfd1ff7ff973b1b361b8980292b5f2f10b2987f838c8cc7285'
+      'fb5cd8e00cea58c94422b605ab75d716bdabcb7be3b944f3760386bed62928772755a1cb657a23ee2fb1d3e5a0ca9ca12bb01f402b38bb20815ba47e97ef30cd'
   },
   credentialStatus: {
     type: 'vcStatusRegistry2019',
-    id: derivedAddress
+    id: issuerKeys.address
   },
   '@context': ['https://schema.org/givenName']
 }
@@ -98,7 +104,7 @@ before(() => {
 
 describe('Integration: Verifiable presentation generator, stringify, parse and validate signature', function () {
   const cryptUtil = new LocalCryptUtils()
-  cryptUtil.importMasterPrivateKey(privKey)
+  cryptUtil.importMasterPrivateKey(issuerKeys.privKey)
   const vcSigner = new VerifiableCredentialSigner(cryptUtil)
   const vpSigner = new VerifiablePresentationSigner(cryptUtil, vcSigner)
   const sut = new VerifiablePresentationGenerator(vpSigner)
@@ -109,6 +115,10 @@ describe('Integration: Verifiable presentation generator, stringify, parse and v
     const isValid = vpSigner.verifyVerifiablePresentation(signedVp)
 
     isValid.should.be.equal(true)
+  })
+
+  it('should test', () => {
+    console.log(vcSigner.signVerifiableCredential(new VerifiableCredential(issuerVcParams), 0, 0))
   })
 
   // A mixed VP contains self-attested credentials as well as issuer-attested credentials
