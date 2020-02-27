@@ -43,7 +43,6 @@ class VerifiableCredentialSigner {
         modelWithoutSignatureValue.proof.signatureValue = undefined;
         return this._cryptUtil.signPayload(accountId, keyId, JSON.stringify(modelWithoutSignatureValue));
     }
-
     /**
      * Verifies the VC's integrity (signature check)
      * and verifies that the vc.issuer field corresponds
@@ -56,19 +55,19 @@ class VerifiableCredentialSigner {
      * @return boolean
      */
     verifyVerifiableCredential(model) {
-        const modelWithoutSignatureValue = new vp_toolkit_models_1.VerifiableCredential(model.toJSON()) // Copy to new variable
-        const publicKey = model.proof.verificationMethod
-        const signature = model.proof.signatureValue
-        const addressFromSigner = '' + this._cryptUtil.getAddressFromPubKey(publicKey)
-        const addressFromIssuerField = model.issuer.split(':').pop()
-        modelWithoutSignatureValue.proof.signatureValue = undefined // Removed the SignatureValue because that field was also empty when signing the payload
-        const payload = JSON.stringify(modelWithoutSignatureValue)
-        // First check if the signer of the VC is the same as the issuer field
-        if (addressFromSigner !== addressFromIssuerField) {
-            return false
-        }
-        // Then do the integrity check
-        return this._cryptUtil.verifyPayload(payload, publicKey, signature)
+      const modelWithoutSignatureValue = new vp_toolkit_models_1.VerifiableCredential(model.toJSON()) // Copy to new variable
+      const publicKey = model.proof.verificationMethod
+      const signature = model.proof.signatureValue
+      const addressFromSigner = '' + this._cryptUtil.getAddressFromPubKey(publicKey)
+      const addressFromIssuerField = model.issuer.split(':').pop()
+      modelWithoutSignatureValue.proof.signatureValue = undefined // Removed the SignatureValue because that field was also empty when signing the payload
+      const payload = JSON.stringify(modelWithoutSignatureValue)
+      // First check if the signer of the VC is the same as the issuer field
+      if (addressFromSigner !== addressFromIssuerField) {
+        return false
+      }
+      // Then do the integrity check
+      return this._cryptUtil.verifyPayload(payload, publicKey, signature)
     }
 }
 exports.VerifiableCredentialSigner = VerifiableCredentialSigner;

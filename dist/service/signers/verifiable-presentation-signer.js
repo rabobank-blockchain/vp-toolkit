@@ -13,7 +13,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const uuid_1 = require("uuid");
@@ -77,7 +76,10 @@ class VerifiablePresentationSigner {
      *
      * Optionally verifies the
      * ownership signatures from the
-     * VerifiablePresentation.
+     * VerifiablePresentation. This means
+     * that the address in vc.credentialSubject.id
+     * must match with the public key used to sign
+     * the VP proof.
      *
      * Only proof sets are supported.
      * @see https://w3c-dvcg.github.io/ld-proofs/#proof-sets
@@ -98,12 +100,14 @@ class VerifiablePresentationSigner {
             // Check credential ownership by looping through the VP proofs and find the matching proof
             let ownershipIsValid = false;
             for (const vpProof of model.proof) {
-                const ownershipSignature = vpProof.signatureValue;
+                const ownershipSignerAddress = this._cryptUtil.getAddressFromPubKey(vpProof.verificationMethod)
+                const ownershipSignature = vpProof.signatureValue
                 const payloadToVerifiy = JSON.stringify(vc) + vpProof.nonce + vpProof.created;
                 if (this._cryptUtil.verifyPayload(payloadToVerifiy, vpProof.verificationMethod, ownershipSignature)
-                    && (correspondenceId === undefined || vpProof.nonce === correspondenceId)) {
-                    ownershipIsValid = true;
-                    break;
+                  && (correspondenceId === undefined || vpProof.nonce === correspondenceId)
+                  && ownershipSignerAddress === vc.credentialSubject.id.split(':').pop()) {
+                    ownershipIsValid = true
+                    break
                 }
             }
             if (!ownershipIsValid) {

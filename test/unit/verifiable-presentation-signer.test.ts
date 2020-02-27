@@ -30,6 +30,9 @@ import { VerifiableCredentialSigner, VerifiablePresentationSigner } from '../../
 
 const assert = chai.assert
 
+const holderAddress = 'holderaddress'
+const issuerAddress = 'issueraddress'
+
 const testVcProof: IProofParams = {
   nonce: '43c29538-bf6a-4020-bd01-39c47c00589e',
   type: 'Secp256k1Signature2019',
@@ -49,10 +52,10 @@ const testVpProof: IProofParams = {
 const testVcParams: IVerifiableCredentialParams = {
   id: 'did:protocol:address',
   type: ['VerifiableCredential'],
-  issuer: 'did:protocol:issueraddress',
+  issuer: 'did:protocol:' + issuerAddress,
   issuanceDate: new Date(Date.UTC(2019, 0, 1, 12, 0, 0)),
   credentialSubject: {
-    id: 'did:protocol:holderaddress',
+    id: 'did:protocol:' + holderAddress,
     type: 'John'
   },
   proof: testVcProof,
@@ -182,6 +185,7 @@ describe('verifiable presentation signer', function () {
     // testVpProof.nonce is the correspondenceId
     const verifiablePresentation = new VerifiablePresentation(testVP)
     sinon.stub(vcSigner, 'verifyVerifiableCredential').returns(true)
+    sinon.stub(cryptUtil, 'getAddressFromPubKey').returns(holderAddress)
     sinon.stub(cryptUtil, 'verifyPayload').returns(true)
 
     const result = sut.verifyVerifiablePresentation(verifiablePresentation, false, testVpProof.nonce)
@@ -193,6 +197,7 @@ describe('verifiable presentation signer', function () {
     // testVpProof.nonce is the correspondenceId
     const verifiablePresentation = new VerifiablePresentation(testVP)
     sinon.stub(vcSigner, 'verifyVerifiableCredential').returns(true)
+    sinon.stub(cryptUtil, 'getAddressFromPubKey').returns(holderAddress)
     sinon.stub(cryptUtil, 'verifyPayload').returns(true)
 
     const result = sut.verifyVerifiablePresentation(verifiablePresentation, false, 'incorrectId')
@@ -206,12 +211,14 @@ describe('verifiable presentation signer', function () {
     const signature = testVpProof.signatureValue
     const payload = JSON.stringify(testVc) + testVpProof.nonce + testVpProof.created.toISOString()
     const vcSignerStub = sinon.stub(vcSigner, 'verifyVerifiableCredential').returns(true)
+    const cryptUtilStub = sinon.stub(cryptUtil, 'getAddressFromPubKey').returns(holderAddress)
     const verifyPayloadStub = sinon.stub(cryptUtil, 'verifyPayload').returns(true)
 
     const result = sut.verifyVerifiablePresentation(verifiablePresentation)
 
     result.should.be.equal(true)
     vcSignerStub.should.have.been.calledOnceWithExactly(testVc)
+    cryptUtilStub.should.have.been.calledOnceWithExactly(verifiablePresentation.proof[0].verificationMethod)
     verifyPayloadStub.should.have.been.calledOnceWithExactly(payload, publicKey, signature)
   })
 
@@ -221,26 +228,30 @@ describe('verifiable presentation signer', function () {
       type: ['VerifiablePresentation'],
       verifiableCredential: [testVc],
       proof: [
-        testVpProof,
         {
           nonce: '966fb58c-c17e-4b42-b7d3-ded38e725a86',
           type: 'Secp256k1Signature2019',
           created: new Date(Date.UTC(2019, 0, 1, 23, 0, 2)),
           verificationMethod: 'pubkey',
           signatureValue: 'secondpresentationsignature'
-        }
+        },
+        testVpProof
       ],
       '@context': ['https://schema.org/givenName']
     }
     const verifiablePresentation = new VerifiablePresentation(vpWithMultipleProofs)
     const vcSignerStub = sinon.stub(vcSigner, 'verifyVerifiableCredential').returns(true)
-    const stub = sinon.stub(cryptUtil, 'verifyPayload').returns(true)
+    const cryptUtilStub = sinon.stub(cryptUtil, 'getAddressFromPubKey').returns(holderAddress)
+    const stub = sinon.stub(cryptUtil, 'verifyPayload')
+      .onFirstCall().returns(false) // First proof does not match
+      .onSecondCall().returns(true)
 
     const result = sut.verifyVerifiablePresentation(verifiablePresentation)
 
     result.should.be.equal(true)
     vcSignerStub.should.have.been.calledOnceWithExactly(testVc)
-    stub.callCount.should.have.been.equal(1)
+    stub.callCount.should.have.been.equal(2)
+    cryptUtilStub.callCount.should.have.been.equal(2)
   })
 
   it('should return false when cryptutil is failing to verify a cred. ownership', () => {
