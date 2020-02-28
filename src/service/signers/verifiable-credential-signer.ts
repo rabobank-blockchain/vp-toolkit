@@ -49,7 +49,12 @@ export class VerifiableCredentialSigner {
   }
 
   /**
-   * Verifies the VerifiableCredential model and its SignatureValue.
+   * Verifies the VC's integrity (signature check)
+   * and verifies that the vc.issuer field corresponds
+   * with the public key that was used for signing the VC.
+   *
+   * NOTE: The VC.issuer field must end with an ethereum
+   * address! Other DID's are not supported at this time.
    *
    * @param {VerifiableCredential} model
    * @return boolean
@@ -58,9 +63,17 @@ export class VerifiableCredentialSigner {
     const modelWithoutSignatureValue = new VerifiableCredential(model.toJSON() as IVerifiableCredentialParams) // Copy to new variable
     const publicKey = model.proof.verificationMethod
     const signature = model.proof.signatureValue as string
+    const addressFromSigner = '' + this._cryptUtil.getAddressFromPubKey(publicKey)
+    const addressFromIssuerField = model.issuer.split(':').pop()
     modelWithoutSignatureValue.proof.signatureValue = undefined // Removed the SignatureValue because that field was also empty when signing the payload
     const payload = JSON.stringify(modelWithoutSignatureValue)
 
+    // First check if the signer of the VC is the same as the issuer field
+    if (addressFromSigner !== addressFromIssuerField) {
+      return false
+    }
+
+    // Then do the integrity check
     return this._cryptUtil.verifyPayload(payload, publicKey, signature)
   }
 }

@@ -24,30 +24,42 @@ import {
 import { LocalCryptUtils } from 'crypt-util'
 import { VerifiableCredentialSigner, VerifiablePresentationGenerator, VerifiablePresentationSigner } from '../../src'
 
-const privKey = 'xprv9s21ZrQH143K3T7143BKMvxoLpFzUkoyU7sQS7iQ88FVGatVTvFe1sKU1Vvysj378AAvvTyjziPZ6AisTNV7uC9irDHEnxZqGYpeceP1S6c'
 const accountId = 0
 const keyId = 0
-const derivedPubKey = '58ffea3c24293e9939823b165a7e9c565077e2458e823a396bdcafa65a4b1e768463a4a80aaa76c15848a4c9c16ff19361ef529cd7b890748fc717a82afe6aae' // From privKey, accountId and keyId
-const derivedAddress = '0xc62CE67381C12615e0b88FF8dD001609926498b8' // If the accountId or keyId above changes, please generate a new address
+const issuerKeys = {
+  privKey: 'xprv9s21ZrQH143K3T7143BKMvxoLpFzUkoyU7sQS7iQ88FVGatVTvFe1sKU1Vvysj378AAvvTyjziPZ6AisTNV7uC9irDHEnxZqGYpeceP1S6c',
+  pubKey: '58ffea3c24293e9939823b165a7e9c565077e2458e823a396bdcafa65a4b1e768463a4a80aaa76c15848a4c9c16ff19361ef529cd7b890748fc717a82afe6aae',
+  address: '0xc62CE67381C12615e0b88FF8dD001609926498b8'
+}
+const holderKeys = { // Always generated as DID by the holder
+  privKey: 'xprv9s21ZrQH143K2xcKPR8Z6GDyvxSRY2FpGNhwmpPcoJKZ3BaeVbixKaoEMAUTBQkjqnmFJXGwQuktCwNVrXUBLvLgjwK5iym9keD3FJN2RdC',
+  // Addresses below derived from the privkey by using accountId 0 and keyId 1,2 and 3.
+  pubKey1: '5945c17dd10f13b0a6b860e6a6cc5ada7496f7718e9fef2bc31e6811d7c0a50491703adf65de62a5177b8812af5bb57586c4751e0ff2b6a7aa7d3c1dee48c670',
+  address1: '0x47b7b31b9346fBb4C960DA804250cD9619b3b704',
+  pubKey2: '9c9e2033483d66f3c04f89c017ff0b946a74815213adf580e4eb737f5813d8230799e1351ad60157b880c08d81bef975a363106ef0105e7c602b8206bcfbfe1a',
+  address2: '0xfCe1EB2147504E2eCA113964042Ba484BDfE70b8',
+  pubKey3: 'c71c4c2536243b3164cb1fef0e574b66252c18397a2cd085c98baf8115df2bf3ee0656968a6d52e31eb28bb9259d44b97e9ddd6fea8a1308d3104aad314565b7',
+  address3: '0xa1800B6ab39623f2f63664fe6902aB26261A614a'
+}
 
 // The self-signed credential using the variables above
 const selfSignedVcParams = {
   id: 'did:protocol:address',
   type: ['VerifiableCredential', 'DidOwnership'],
-  issuer: 'did:eth:' + derivedAddress,
+  issuer: 'did:eth:' + holderKeys.address1,
   issuanceDate: new Date('2019-01-01T23:34:45.000Z'),
-  credentialSubject: { id: 'did:eth:' + derivedAddress },
+  credentialSubject: { id: 'did:eth:' + holderKeys.address1 },
   proof: {
     type: 'secp256k1Signature2019',
     created: new Date('2019-07-30T09:51:27.589Z'),
-    verificationMethod: derivedPubKey,
+    verificationMethod: holderKeys.pubKey1,
     nonce: 'deebe007-ab09-4893-a3be-f47b465edd8c',
     signatureValue:
-      'f9c38be2b468bd5fb853d2ce2ecf95b2223885802b5243c75a97b5645315efbc5b9ad936a23e8a7bd5081329ff9cf9c0d3722ae09ff3dce6eba0169d6d8e474f'
+      'f01a941fbdad053b950233add21d3f175c0f9e4542749e8e1f44dba83bab37b513e760d4f39d212fa2b54aec32e051ef0bf797d01c38f5085f57054efc9bdb91'
   },
   credentialStatus: {
     type: 'vcStatusRegistry2019',
-    id: derivedAddress
+    id: holderKeys.address1
   },
   '@context': undefined
 }
@@ -63,24 +75,23 @@ const selfSignedVpParams: IVerifiablePresentationParams = {
 const issuerVcParams: IVerifiableCredentialParams = {
   id: 'did:protocol:address',
   type: ['VerifiableCredential'],
-  issuer: 'did:protocol:issueraddress',
+  issuer: 'did:eth:' + issuerKeys.address,
   issuanceDate: new Date(Date.UTC(2019, 0, 1, 23, 34, 56)),
   credentialSubject: {
-    id: 'did:eth:' + derivedAddress,
+    id: 'did:eth:' + holderKeys.address2,
     type: 'John'
   },
   proof: {
     type: 'secp256k1Signature2019',
     created: new Date(Date.UTC(2019, 6, 30, 9, 8, 49, 665)),
-    verificationMethod:
-      '02ca0947afa216355ac2ecc7ac147b2c53c5d27f65eba6701a400d223c2ca6172b2944026138496fcebafa72c5141a17f4d86c58528637e0579125f8d22d6dc8',
+    verificationMethod: issuerKeys.pubKey,
     nonce: '62a7c7e6-b025-4e00-8956-c3859dacfe92',
     signatureValue:
-      '6f7ff5135421c5f298ceeabf872ec785e9c27d94cd5a885e42c7dc1f68314b287a52216fe0b070cfd1ff7ff973b1b361b8980292b5f2f10b2987f838c8cc7285'
+      '83f0c76b3606b5ce95e37fa7f5becaf059cd5fe2bc08e133d019c585d2f995bb2fdcf1df3ef82dcae1c5478a4f4d7c36942b5d79338f3af37df1917c7c9c9937'
   },
   credentialStatus: {
     type: 'vcStatusRegistry2019',
-    id: derivedAddress
+    id: issuerKeys.address
   },
   '@context': ['https://schema.org/givenName']
 }
@@ -92,23 +103,49 @@ const mixedVpParams: IVerifiablePresentationParams = {
   verifiableCredential: [new VerifiableCredential(selfSignedVcParams), new VerifiableCredential(issuerVcParams)]
 }
 
+// Malicious VP
+const maliciousVpParams: IVerifiablePresentationParams = {
+  id: 'urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5',
+  type: ['VerifiablePresentation'],
+  verifiableCredential: [new VerifiableCredential(issuerVcParams)],
+  proof: [
+    {
+      type: 'secp256k1Signature2019',
+      created: new Date('2020-02-26T14:42:15.880Z'),
+      verificationMethod: '3340a4c70c5d95df926d89b6ad9d5924d446c3facd3b99e41dd4a4439c39fd57b7c5947179f6af37f1d75430a6869d5e49de27531122051c59c0214978b92667',
+      nonce: '2e4ecdc1-bbc2-42c3-9eac-948ce0ee4a39',
+      signatureValue: '3488febdf11558e4f267943da4b8f8c643076d6a0a72db62371d77e5fbc300076b98222ef003be8e8710a93279987646f3231ddb8f9827642f1570c28dce1a1f'
+    }
+  ]
+}
+
 before(() => {
   chai.should()
 })
 
 describe('Integration: Verifiable presentation generator, stringify, parse and validate signature', function () {
   const cryptUtil = new LocalCryptUtils()
-  cryptUtil.importMasterPrivateKey(privKey)
+  cryptUtil.importMasterPrivateKey(holderKeys.privKey)
   const vcSigner = new VerifiableCredentialSigner(cryptUtil)
   const vpSigner = new VerifiablePresentationSigner(cryptUtil, vcSigner)
   const sut = new VerifiablePresentationGenerator(vpSigner)
 
   // A mixed VP contains self-attested credentials as well as issuer-attested credentials
   it('should generate, sign and then validate a mixed VP correctly', () => {
-    const signedVp = sut.generateVerifiablePresentation(mixedVpParams, [{ accountId: accountId, keyId: keyId }])
+    const signedVp = sut.generateVerifiablePresentation(mixedVpParams, [
+      { accountId: 0, keyId: 0 },
+      { accountId: 0, keyId: 1 }
+    ])
     const isValid = vpSigner.verifyVerifiablePresentation(signedVp)
 
     isValid.should.be.equal(true)
+  })
+
+  it('should fail verification if the credentialSubject.id did not create the proof', () => {
+    const maliciousVP = new VerifiablePresentation(maliciousVpParams) // Signed with accountid and keyid 100, which does not corresponds to the VC
+    const isValid = vpSigner.verifyVerifiablePresentation(maliciousVP)
+
+    isValid.should.be.equal(false)
   })
 
   // A mixed VP contains self-attested credentials as well as issuer-attested credentials
@@ -125,7 +162,10 @@ describe('Integration: Verifiable presentation generator, stringify, parse and v
 
   // A mixed VP contains self-attested credentials as well as issuer-attested credentials
   it('should generate, sign, stringify, parse and then validate a mixed VP correctly', () => {
-    const signedVp = sut.generateVerifiablePresentation(mixedVpParams, [{ accountId: accountId, keyId: keyId }])
+    const signedVp = sut.generateVerifiablePresentation(mixedVpParams, [
+      { accountId: 0, keyId: 0 },
+      { accountId: 0, keyId: 1 }
+    ])
     const stringifiedVp = JSON.stringify(signedVp)
     const parsedVp = new VerifiablePresentation(JSON.parse(stringifiedVp))
 

@@ -2,13 +2,11 @@ import { ChallengeRequest } from 'vp-toolkit-models'
 import { CryptUtil } from 'crypt-util'
 
 export declare class ChallengeRequestSigner {
+  readonly signatureType: string
+  readonly cryptUtil: CryptUtil
   private _cryptUtil
 
   constructor (_cryptUtil: CryptUtil);
-
-  get signatureType (): string;
-
-  get cryptUtil (): CryptUtil;
 
   /**
    * Signs the ChallengeRequest model and returns the SignatureValue.
@@ -20,14 +18,15 @@ export declare class ChallengeRequestSigner {
    * @param {ChallengeRequest} model
    * @param {number} accountId
    * @param {number} keyId
-     * @return string
-     */
-    signChallengeRequest(model: ChallengeRequest, accountId: number, keyId: number): string;
-    /**
-     * Verifies the ChallengeRequest model and its SignatureValue.
-     *
-     * @param {ChallengeRequest} model
-     * @return boolean
-     */
-    verifyChallengeRequest(model: ChallengeRequest): boolean;
+   * @return string
+   */
+  signChallengeRequest (model: ChallengeRequest, accountId: number, keyId: number): string;
+
+  /**
+   * Verifies the ChallengeRequest model and its SignatureValue.
+   *
+   * @param {ChallengeRequest} model
+   * @return boolean
+   */
+  verifyChallengeRequest (model: ChallengeRequest): boolean;
 }

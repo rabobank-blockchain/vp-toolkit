@@ -91,34 +91,65 @@ describe('verifiable credential signer', function () {
     stub.should.have.been.calledOnceWithExactly(0, 0, JSON.stringify(vcWithoutSig))
   })
 
-  it('should call cryptutil, for the verify method, with the correct params', () => {
+  it('should fail verification if the issuer DID does not match the VC signer', () => {
     const verifiableCredential = new VerifiableCredential(testCred)
-    const publicKey = verifiableCredential.proof.verificationMethod
-    const signature = String(verifiableCredential.proof.signatureValue)
-    const vcWithoutSig = new VerifiableCredential(verifiableCredential.toJSON() as IVerifiableCredentialParams)
-    vcWithoutSig.proof.signatureValue = undefined
-    const expectedPayload = JSON.stringify(vcWithoutSig)
-    const stub = sinon.stub(cryptUtil, 'verifyPayload').returns(true)
+    const getAddressStub = sinon.stub(cryptUtil, 'getAddressFromPubKey').returns('0xb122c093fB72050e939a2B18d5Dd5fd7ad29f378') // Random
+    const verifyPayloadStub = sinon.stub(cryptUtil, 'verifyPayload') // It should stop before reaching this call
 
     const result = sut.verifyVerifiableCredential(verifiableCredential)
 
+    result.should.be.equal(false)
+    getAddressStub.should.have.been.calledOnceWithExactly(verifiableCredential.proof.verificationMethod)
+    verifyPayloadStub.callCount.should.be.equal(0)
+  })
+
+  it('should call cryptutil.verifyPayload with the proper parameters', () => {
+    const testVariables = setupCryptUtilVariables()
+    const verifyPayloadStub = sinon.stub(cryptUtil, 'verifyPayload').returns(true)
+
+    const result = sut.verifyVerifiableCredential(testVariables.vc)
+
     result.should.be.equal(true)
-    stub.should.have.been.calledOnceWithExactly(expectedPayload, publicKey, signature)
+    testVariables.getAddressStub.should.have.been.calledOnceWithExactly(testVariables.vc.proof.verificationMethod)
+    verifyPayloadStub.should.have.been.calledOnceWithExactly(
+      testVariables.expectedPayload,
+      testVariables.publicKey,
+      testVariables.signature
+    )
   })
 
   it('should return false when cryptutil is failing to verify', () => {
-    const verifiableCredential = new VerifiableCredential(testCred)
-    const publicKey = verifiableCredential.proof.verificationMethod
-    const signature = String(verifiableCredential.proof.signatureValue)
-    const vcWithoutSig = new VerifiableCredential(verifiableCredential.toJSON() as IVerifiableCredentialParams)
-    vcWithoutSig.proof.signatureValue = undefined
-    const expectedPayload = JSON.stringify(vcWithoutSig)
-    const stub = sinon.stub(cryptUtil, 'verifyPayload').returns(false) // Fail here
+    const testVariables = setupCryptUtilVariables()
+    const verifyPayloadStub = sinon.stub(cryptUtil, 'verifyPayload').returns(false) // Fail here
 
     const vcSigner = new VerifiableCredentialSigner(cryptUtil)
-    const result = vcSigner.verifyVerifiableCredential(verifiableCredential)
-    result.should.be.equal(false)
+    const result = vcSigner.verifyVerifiableCredential(testVariables.vc)
 
-    return stub.should.have.been.calledOnceWithExactly(expectedPayload, publicKey, signature)
+    result.should.be.equal(false)
+    testVariables.getAddressStub.should.have.been.calledOnceWithExactly(testVariables.vc.proof.verificationMethod)
+    verifyPayloadStub.should.have.been.calledOnceWithExactly(
+      testVariables.expectedPayload,
+      testVariables.publicKey,
+      testVariables.signature
+    )
   })
+
+  function setupCryptUtilVariables () {
+    const vc = new VerifiableCredential(testCred)
+    const publicKey = vc.proof.verificationMethod
+    const signature = String(vc.proof.signatureValue)
+    const vcWithoutSig = new VerifiableCredential(vc.toJSON() as IVerifiableCredentialParams)
+    vcWithoutSig.proof.signatureValue = undefined
+    const expectedPayload = JSON.stringify(vcWithoutSig)
+    const getAddressStub = sinon.stub(cryptUtil, 'getAddressFromPubKey')
+      .returns(vc.issuer.split(':').pop() as string)
+
+    return {
+      vc,
+      publicKey,
+      signature,
+      expectedPayload,
+      getAddressStub
+    }
+  }
 })
