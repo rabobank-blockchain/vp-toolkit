@@ -50,5 +50,5 @@ export declare class VerifiablePresentationSigner {
    * @param {boolean} skipOwnershipValidation
    * @return boolean
    */
-  verifyVerifiablePresentation (model: VerifiablePresentation, skipOwnershipValidation?: boolean, correspondenceId?: string): boolean;
+    verifyVerifiablePresentation(model: VerifiablePresentation, skipOwnershipValidation?: boolean, correspondenceId?: string): boolean;
 }
