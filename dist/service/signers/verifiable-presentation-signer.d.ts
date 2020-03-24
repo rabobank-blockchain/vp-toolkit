@@ -3,14 +3,12 @@ import { CryptUtil } from 'crypt-util'
 import { VerifiableCredentialSigner } from './verifiable-credential-signer'
 
 export declare class VerifiablePresentationSigner {
+  readonly signatureType: string
+  readonly cryptUtil: CryptUtil
   private _cryptUtil
   private _verifiableCredentialSigner
 
   constructor (_cryptUtil: CryptUtil, _verifiableCredentialSigner: VerifiableCredentialSigner);
-
-  get signatureType (): string;
-
-  get cryptUtil (): CryptUtil;
 
   /**
    * Creates a proof objects for the VerifiableCredentials.
@@ -22,16 +20,16 @@ export declare class VerifiablePresentationSigner {
    *
    * A random uuid will be used if the correspondenceId
    * is not provided.
-     *
-     * @param vp the verifiable presentation parameters (not the object itself)
-     * @param {{accountId: number, keyId: number}[]} keys
-     * @param {string} correspondenceId to use as proof nonce to prove the session between holder and counterparty
-     * @return IProofParams[]
-     */
-    generateProofs(vp: IVerifiablePresentationParams, keys: {
-        accountId: number;
-        keyId: number;
-    }[], correspondenceId?: string): IProofParams[];
+   *
+   * @param vp the verifiable presentation parameters (not the object itself)
+   * @param {{accountId: number, keyId: number}[]} keys
+   * @param {string} correspondenceId to use as proof nonce to prove the session between holder and counterparty
+   * @return IProofParams[]
+   */
+  generateProofs (vp: IVerifiablePresentationParams, keys: {
+    accountId: number;
+    keyId: number;
+  }[], correspondenceId?: string): IProofParams[];
     /**
      * Verifies all VerifiableCredential
      * signatures.
