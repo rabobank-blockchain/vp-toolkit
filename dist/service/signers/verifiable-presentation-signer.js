@@ -100,15 +100,15 @@ class VerifiablePresentationSigner {
             // Check credential ownership by looping through the VP proofs and find the matching proof
             let ownershipIsValid = false;
             for (const vpProof of model.proof) {
-                const ownershipSignerAddress = this._cryptUtil.getAddressFromPubKey(vpProof.verificationMethod)
-                const ownershipSignature = vpProof.signatureValue
-                const payloadToVerifiy = JSON.stringify(vc) + vpProof.nonce + vpProof.created;
-                if (this._cryptUtil.verifyPayload(payloadToVerifiy, vpProof.verificationMethod, ownershipSignature)
-                  && (correspondenceId === undefined || vpProof.nonce === correspondenceId)
-                  && ownershipSignerAddress === vc.credentialSubject.id.split(':').pop()) {
-                    ownershipIsValid = true
-                    break
-                }
+              const ownershipSignerAddress = this._cryptUtil.getAddressFromPubKey(vpProof.verificationMethod)
+              const ownershipSignature = vpProof.signatureValue
+              const payloadToVerifiy = JSON.stringify(vc) + vpProof.nonce + vpProof.created
+              if (this._cryptUtil.verifyPayload(payloadToVerifiy, vpProof.verificationMethod, ownershipSignature)
+                && (correspondenceId === undefined || vpProof.nonce === correspondenceId)
+                && ownershipSignerAddress === vc.credentialSubject.id.split(':').pop()) {
+                ownershipIsValid = true
+                break
+              }
             }
             if (!ownershipIsValid) {
                 return false;
