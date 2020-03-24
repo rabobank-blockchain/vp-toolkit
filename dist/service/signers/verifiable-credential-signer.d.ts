@@ -23,12 +23,7 @@ export declare class VerifiableCredentialSigner {
   signVerifiableCredential (model: VerifiableCredential, accountId: number, keyId: number): string;
 
   /**
-   * Verifies the VC's integrity (signature check)
-   * and verifies that the vc.issuer field corresponds
-   * with the public key that was used for signing the VC.
-   *
-   * NOTE: The VC.issuer field must end with an ethereum
-   * address! Other DID's are not supported at this time.
+   * Verifies the VerifiableCredential model and its SignatureValue.
    *
    * @param {VerifiableCredential} model
    * @return boolean

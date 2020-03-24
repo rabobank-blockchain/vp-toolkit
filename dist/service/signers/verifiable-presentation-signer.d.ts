@@ -30,25 +30,21 @@ export declare class VerifiablePresentationSigner {
     accountId: number;
     keyId: number;
   }[], correspondenceId?: string): IProofParams[];
-
-  /**
-   * Verifies all VerifiableCredential
-   * signatures.
-   *
-   * Optionally verifies the
-   * ownership signatures from the
-   * VerifiablePresentation. This means
-   * that the address in vc.credentialSubject.id
-   * must match with the public key used to sign
-   * the VP proof.
-   *
-   * Only proof sets are supported.
-   * @see https://w3c-dvcg.github.io/ld-proofs/#proof-sets
-   *
-   * @param {VerifiablePresentation} model
-   * @param {string|undefined} correspondenceId this string must be included in the VP proof if ownership is validated
-   * @param {boolean} skipOwnershipValidation
-   * @return boolean
-   */
-  verifyVerifiablePresentation (model: VerifiablePresentation, skipOwnershipValidation?: boolean, correspondenceId?: string): boolean;
+    /**
+     * Verifies all VerifiableCredential
+     * signatures.
+     *
+     * Optionally verifies the
+     * ownership signatures from the
+     * VerifiablePresentation.
+     *
+     * Only proof sets are supported.
+     * @see https://w3c-dvcg.github.io/ld-proofs/#proof-sets
+     *
+     * @param {VerifiablePresentation} model
+     * @param {string|undefined} correspondenceId this string must be included in the VP proof if ownership is validated
+     * @param {boolean} skipOwnershipValidation
+     * @return boolean
+     */
+    verifyVerifiablePresentation(model: VerifiablePresentation, skipOwnershipValidation?: boolean, correspondenceId?: string): boolean;
 }
