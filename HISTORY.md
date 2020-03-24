@@ -1,4 +1,4 @@
-# 0.2.2 / 24-03-2020
+# 0.2.3 / 24-03-2020
 
 **Enhancements**
 - Updated deps and downgraded Typescript 3.4.5 to ensure compatible `d.ts` files
