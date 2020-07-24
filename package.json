@@ -1,6 +1,6 @@
 {
   "name": "vp-toolkit",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A library to generate Verifiable Presentations and Verfiable Credentials",
   "engines": {
     "node": ">=8.15.0",
