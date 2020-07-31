@@ -1,7 +1,8 @@
-# 0.2.4 / 24-07-2020
+# 0.2.4 / 01-08-2020
 
 **Enhancements**
-- Security Patches for depeneent packages
+- Removed unused package `class-transformer`
+- Security Patches for dependent packages
 
 # 0.2.3 / 24-03-2020
 
