@@ -59,7 +59,7 @@
     "@types/uuid": "^3.4.8",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "mocha": "^7.1.1",
+    "mocha": "^10.2.0",
     "mocha-multi-reporters": "^1.1.7",
     "nyc": "^15.0.0",
     "sinon": "^8.1.1",
