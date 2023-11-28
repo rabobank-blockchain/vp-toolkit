@@ -71,7 +71,7 @@
     "typescript": "~3.4.5"
   },
   "dependencies": {
-    "class-transformer": "^0.2.3",
+    "class-transformer": "^0.3.1",
     "crypt-util": "^0.1.5",
     "uuid": "^3.4.0",
     "vp-toolkit-models": "^0.2.2"
